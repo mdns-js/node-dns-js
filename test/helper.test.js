@@ -27,6 +27,13 @@ describe('helper', function () {
     done();
   });
 
+  it('readBin', function (done) {
+    var filename = path.join(__dirname, 'fixtures', 'mdns-readynas.bin');
+    var b = helper.readBin(filename);
+    b.should.be.instanceOf(Buffer);
+    done();
+  })
+
   describe('from buffer', function () {
     var b = new Buffer(packets.in.sample10, 'hex');
     it('writeJs', function (done) {
