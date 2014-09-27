@@ -12,6 +12,8 @@ var fixtureDir = path.join(__dirname, 'fixtures');
 var nativeFixtureDir = path.join(__dirname, '..', 'node_modules',
   'native-dns-packet', 'test', 'fixtures');
 
+var NativePacket = require('native-dns-packet');
+
 function createWritingTests(testFolder) {
   var files = fs.readdirSync(testFolder).filter(function (f) { return /\.js$/.test(f); });
   files.forEach(function (file) {
@@ -45,21 +47,35 @@ function createParsingTests(testFolder) {
 }
 
 
+
 describe('DNSPacket', function () {
+
   it('should be able to create a wildcard query', function (done) {
     var packet = new dns.DNSPacket();
     packet.header.rd = 0;
-    packet.question.push(new dns.DNSRecord(
+    var query = new dns.DNSRecord(
       '_services._dns-sd._udp.local',
       dns.DNSRecord.Type.PTR,
       1
-    ));
+    );
+    packet.question.push(query);
     var buf = dns.DNSPacket.toBuffer(packet);
 
     //compare fixture
     buf.toString('hex').should.equal(
       helper.readBin(path.join(fixtureDir, 'mdns-outbound-wildcard-query.bin'))
         .toString('hex'), 'Not as from fixture');
+
+    var np = new NativePacket();
+    np.header.rd = 0;
+    np.question.push(query);
+    var nb = new Buffer(4096);
+    var written = NativePacket.write(nb, np);
+    nb = nb.slice(0, written);
+
+    buf.toString('hex').should.equal(
+      nb.toString('hex'), 'Not as from native');
+
     done();
   });
 
