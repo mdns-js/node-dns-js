@@ -1,3 +1,5 @@
+var Code = require('code');   // assertion library
+var expect = Code.expect;
 var debug = require('debug')('mdns-packet:test:helper');
 var fs = require('fs');
 var vm = require('vm');
@@ -41,14 +43,17 @@ exports.prepareJs = function (text) {
 
 exports.readJs = function (filename) {
   var js = 'foo = ' + fs.readFileSync(filename, 'utf8');
+  var sandbox = {
+    Buffer: Buffer
+  };
   js = exports.prepareJs(js);
-  return vm.runInThisContext(js, filename);
+  return vm.runInNewContext(js, sandbox, filename);
 };
 
 exports.equalJs = function (expected, actual) {
   var e = exports.createJs(expected);
   var a = exports.createJs(actual);
-  a.should.equal(e, 'Objects are not the same');
+  expect(a, 'Objects are not the same').to.equal(e);
 };
 
 var equalDeep = exports.equalDeep = function (expected, actual, path) {
@@ -61,14 +66,20 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
   for (var key in expected) {
     if (expected.hasOwnProperty(key)) {
       debug('expected %s', key, expected[key]);
-      actual.should.have.property(key);
+      if (actual instanceof Array) {
+        expect(actual[key]).to.exist();
+      }
+      else {
+        expect(actual).to.include(key);
+      }
       var a = actual[key];
       var e = expected[key];
       if (e instanceof Buffer) {
-        a.length.should.equal(e.length, 'not matching length of ' +
-            dp(np, key));
-        a.toString('hex').should.equal(e.toString('hex'),
-          'buffer not same in ' + dp(np, key));
+        expect(a, 'not matching length of ' + dp(np, key))
+        .to.have.length(e.length);
+
+        expect(a.toString('hex'), 'buffer not same in ' + dp(np, key))
+        .to.equal(e.toString('hex'));
       }
       else if (typeof e === 'object') {
         equalDeep(e, a, dp(np, key));
@@ -77,16 +88,16 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
         if (key !== 'name') {
           var atype = typeof a;
           if (atype === 'undefined') {
-            atype.should.equal(typeof e);
+            expect(atype).to.equal(typeof e);
           }
           else {
-            a.should.equal(e, util.format('%s (%s) is not as expected',
-              dp(np, key), atype));
+            expect(a, util.format('%s (%s) is not as expected',
+              dp(np, key), atype)).to.equal(e);
           }
         }
         else {
-          a.should.have.length(e.length,
-            util.format('wrong length of %s', dp(np, key)));
+          expect(a, util.format('wrong length of %s', dp(np, key)))
+          .to.have.length(e.length);
           debug('actual: %s, expected: %s', a, e);
         }
       }

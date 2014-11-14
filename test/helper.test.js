@@ -1,7 +1,15 @@
-/*global describe: true, it: true */
+var Code = require('code');   // assertion library
+var Lab = require('lab');
+var lab = exports.lab = Lab.script();
+
+var describe = lab.describe;
+var it = lab.it;
+//var before = lab.before;
+//var after = lab.after;
+var expect = Code.expect;
+
 var path = require('path');
 var helper = require('./helper');
-var should = require('should');
 var fs = require('fs');
 
 var Packet = require('..').DNSPacket;
@@ -14,25 +22,25 @@ describe('helper', function () {
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');
     var text = fs.readFileSync(filename, 'utf8');
     var js = helper.prepareJs(text);
-    js.should.be.a.String;
-    js.should.match(/new Buffer\(/);
+    expect(js).to.be.a.String;
+    expect(js).to.match(/new Buffer\(/);
     done();
   });
 
   it('readJs', function (done) {
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');
     var js = helper.readJs(filename);
-    should.exist(js);
-    js.should.have.property('header');
+    expect(js).to.exist();
+    expect(js).to.include('header');
     done();
   });
 
   it('readBin', function (done) {
     var filename = path.join(__dirname, 'fixtures', 'mdns-readynas.bin');
     var b = helper.readBin(filename);
-    b.should.be.instanceOf(Buffer);
+    expect(b).to.be.instanceOf(Buffer);
     done();
-  })
+  });
 
   describe('from buffer', function () {
     var b = new Buffer(packets.in.sample10, 'hex');

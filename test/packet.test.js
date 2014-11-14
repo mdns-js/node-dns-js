@@ -1,7 +1,14 @@
+var Code = require('code');   // assertion library
+var Lab = require('lab');
+var lab = exports.lab = Lab.script();
 
-/*global describe: true, it: true */
+var describe = lab.describe;
+var it = lab.it;
+//var before = lab.before;
+//var after = lab.after;
+var expect = Code.expect;
+
 //var debug = require('debug')('mdns-packet:test:dns');
-var should = require('should');
 var path = require('path');
 var fs = require('fs');
 
@@ -19,13 +26,13 @@ function createWritingTests(testFolder) {
   files.forEach(function (file) {
     it('can write ' + file, function (done) {
       var js = helper.readJs(path.join(testFolder, file));
-      should.exist(js);
+      expect(js).to.exist();
       var buff = dns.DNSPacket.toBuffer(js);
       var binFile = path.join(testFolder, file.replace(/\.js$/, '.bin'));
       var bin = helper.readBin(binFile);
       var rtrip = dns.DNSPacket.parse(buff);
-      buff.should.have.length(bin.length);
-      buff.should.be.equal(bin);
+      expect(buff).to.have.length(bin.length);
+      expect(buff).to.be.equal(bin);
       helper.equalDeep(js, rtrip);
       done();
     });
@@ -50,7 +57,8 @@ function createParsingTests(testFolder) {
 
 describe('DNSPacket', function () {
 
-  it('should be able to create a wildcard query', function (done) {
+  it('should be able to create a wildcard query', {only: true},
+  function (done) {
     var packet = new dns.DNSPacket();
     packet.header.rd = 0;
     var query = new dns.DNSRecord(
@@ -62,9 +70,10 @@ describe('DNSPacket', function () {
     var buf = dns.DNSPacket.toBuffer(packet);
 
     //compare fixture
-    buf.toString('hex').should.equal(
-      helper.readBin(path.join(fixtureDir, 'mdns-outbound-wildcard-query.bin'))
-        .toString('hex'), 'Not as from fixture');
+    expect(buf.toString('hex'), 'Not as from fixture').to.equal(
+      helper.readBin(
+        path.join(fixtureDir, 'mdns-outbound-wildcard-query.bin')
+      ).toString('hex'));
 
     var np = new NativePacket();
     np.header.rd = 0;
@@ -73,8 +82,8 @@ describe('DNSPacket', function () {
     var written = NativePacket.write(nb, np);
     nb = nb.slice(0, written);
 
-    buf.toString('hex').should.equal(
-      nb.toString('hex'), 'Not as from native');
+    expect(buf.toString('hex'), 'Not as from native').to.equal(
+      nb.toString('hex'));
 
     done();
   });
@@ -83,7 +92,7 @@ describe('DNSPacket', function () {
     createParsingTests(fixtureDir);
   });
 
-  describe.skip('create fixtures', function () {
+  describe('create fixtures', {skip:true}, function () {
     createWritingTests(fixtureDir);
   });
 
