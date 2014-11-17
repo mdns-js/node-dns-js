@@ -1,13 +1,22 @@
+var debug = require('debug')('mdns-packet:test:helper');
 var Code = require('code');   // assertion library
+
 var expect = Code.expect;
 var debug = require('debug')('mdns-packet:test:helper');
 var fs = require('fs');
 var vm = require('vm');
 var util = require('util');
+var path = require('path');
+
+var dns = require('../');
+
 
 
 exports.createJs = function (obj) {
-  return util.inspect(obj, {depth: null});
+  // var j = JSON.stringify(obj);
+  // obj = JSON.parse(j);
+  return util.inspect(obj, {depth: null})
+  .replace(/\[Getter\]/g, 'undefined');
 };
 
 exports.writeBin = function (filename, buf) {
@@ -16,12 +25,12 @@ exports.writeBin = function (filename, buf) {
   ws.end();
 };
 
-exports.writeJs = function (filename, obj) {
+var writeJs = exports.writeJs = function (filename, obj) {
   fs.writeFileSync(filename, exports.createJs(obj));
 };
 
 
-exports.readBin = function (filename) {
+var readBin = exports.readBin = function (filename) {
   return fs.readFileSync(filename);
 };
 
@@ -32,21 +41,28 @@ exports.prepareJs = function (text) {
     debug('matches', matches);
     matches.forEach(function (m) {
       var bytes = m.match(/ ([a-f0-9]{2})/g);
-      var str = bytes.join('');
-      str = str.replace(/ /g, '');
+      var str = '';
+      if (bytes !== null) {
+        str = bytes.join('');
+        str = str.replace(/ /g, '');
+      }
       var r = 'new Buffer("' + str + '", "hex")';
       text = text.replace(m, r);
     });
   }
+  //[Getter]
+  text = text.replace(/\[Getter\]/g, 'undefined');
   return text;
 };
 
-exports.readJs = function (filename) {
-  var js = 'foo = ' + fs.readFileSync(filename, 'utf8');
+var readJs = exports.readJs = function (filename) {
+  if (!fs.existsSync(filename)) {
+    return false;
+  }
+  var js = exports.prepareJs('foo = ' + fs.readFileSync(filename, 'utf8'));
   var sandbox = {
     Buffer: Buffer
   };
-  js = exports.prepareJs(js);
   return vm.runInNewContext(js, sandbox, filename);
 };
 
@@ -54,6 +70,16 @@ exports.equalJs = function (expected, actual) {
   var e = exports.createJs(expected);
   var a = exports.createJs(actual);
   expect(a, 'Objects are not the same').to.equal(e);
+};
+
+exports.equalBuffer = function (expected, actual, start) {
+  start = start || 0;
+  for (var i = start; i < expected.length; i++) {
+    var e = expected.toString('hex', i, i + 1);
+    var a = actual.toString('hex', i, i + 1);
+    var msg = util.format('offset %s', i.toString(16));
+    expect(a, msg).to.equal(e);
+  }
 };
 
 var equalDeep = exports.equalDeep = function (expected, actual, path) {
@@ -65,15 +91,17 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
 
   for (var key in expected) {
     if (expected.hasOwnProperty(key)) {
-      debug('expected %s', key, expected[key]);
+      debug('looking at %s in %s', key, path);
       if (actual instanceof Array) {
         expect(actual[key]).to.exist();
       }
       else {
-        expect(actual).to.include(key);
+        debug('actual', actual);
+        expect(actual, path).to.include(key);
       }
       var a = actual[key];
       var e = expected[key];
+      var prop = Object.getOwnPropertyDescriptor(actual, key);
       if (e instanceof Buffer) {
         expect(a, 'not matching length of ' + dp(np, key))
         .to.have.length(e.length);
@@ -91,8 +119,11 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
             expect(atype).to.equal(typeof e);
           }
           else {
-            expect(a, util.format('%s (%s) is not as expected',
-              dp(np, key), atype)).to.equal(e);
+            //don't test getters
+            if (!prop.get) {
+              expect(a, util.format('%s (%s) is not as expected',
+                dp(np, key), atype)).to.equal(e);
+            }
           }
         }
         else {
@@ -103,4 +134,55 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
       }
     }
   }
+};
+
+
+exports.createWritingTests = function (lab, testFolder) {
+  //var describe = lab.describe;
+  var it = lab.it;
+
+  var files = fs.readdirSync(testFolder).filter(function (f) { return /\.js$/.test(f); });
+  files.forEach(function (file) {
+    it('can write ' + file, function (done) {
+      var js = readJs(path.join(testFolder, file));
+      expect(js).to.exist();
+      var buff = dns.DNSPacket.toBuffer(js);
+      var binFile = path.join(testFolder, file.replace(/\.js$/, '.bin'));
+      var bin = readBin(binFile);
+      var rtrip = dns.DNSPacket.parse(buff);
+      expect(buff).to.have.length(bin.length);
+      expect(buff).to.be.equal(bin);
+      equalDeep(js, rtrip);
+      done();
+    });
+  });
+};
+
+exports.createParsingTests = function (lab, testFolder) {
+  //var describe = lab.describe;
+  var files = fs.readdirSync(testFolder).filter(function (f) { return /\.bin$/.test(f); });
+  files.forEach(function (file) {
+    exports.createFileParsingTest(lab, path.join(testFolder, file));
+  });
+};
+
+
+exports.createFileParsingTest = function (lab, binFile) {
+  var it = lab.it;
+
+  it('can parse ' + binFile, function (done) {
+      var bin = readBin(binFile);
+      var jsfile = binFile.replace(/\.bin$/, '.js');
+      var js = readJs(jsfile);
+      var ret = dns.DNSPacket.parse(bin);
+      debug(binFile, ret);
+      if (!js) {
+        writeJs(jsfile, ret);
+      }
+      else {
+        equalDeep(js, ret);
+        //equalJs(js, ret);
+      }
+      done();
+    });
 };

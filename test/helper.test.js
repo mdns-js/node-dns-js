@@ -16,7 +16,19 @@ var Packet = require('..').DNSPacket;
 //var fixtureDir = path.join(__dirname, 'fixtures');
 var packets = require('./packets.json');
 
+// var TestObj = function () {
+//   this.subprop = {
+//     a: 1,
+//     b: 2
+//   };
+//   this.__defineGetter__('getMe', function () {
+//     return 'got it';
+//   });
+// };
+
+
 describe('helper', function () {
+
   it('prepareJs', function (done) {
     //this is a tricky one
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');

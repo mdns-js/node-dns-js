@@ -10,7 +10,7 @@ var expect = Code.expect;
 
 //var debug = require('debug')('mdns-packet:test:dns');
 var path = require('path');
-var fs = require('fs');
+//var fs = require('fs');
 
 var helper = require('./helper');
 var dns = require('../');
@@ -21,44 +21,10 @@ var nativeFixtureDir = path.join(__dirname, '..', 'node_modules',
 
 var NativePacket = require('native-dns-packet');
 
-function createWritingTests(testFolder) {
-  var files = fs.readdirSync(testFolder).filter(function (f) { return /\.js$/.test(f); });
-  files.forEach(function (file) {
-    it('can write ' + file, function (done) {
-      var js = helper.readJs(path.join(testFolder, file));
-      expect(js).to.exist();
-      var buff = dns.DNSPacket.toBuffer(js);
-      var binFile = path.join(testFolder, file.replace(/\.js$/, '.bin'));
-      var bin = helper.readBin(binFile);
-      var rtrip = dns.DNSPacket.parse(buff);
-      expect(buff).to.have.length(bin.length);
-      expect(buff).to.be.equal(bin);
-      helper.equalDeep(js, rtrip);
-      done();
-    });
-  });
-}
-
-function createParsingTests(testFolder) {
-  var files = fs.readdirSync(testFolder).filter(function (f) { return /\.bin$/.test(f); });
-  files.forEach(function (file) {
-    it('can parse ' + file, function (done) {
-      var bin = helper.readBin(path.join(testFolder, file));
-      var js = helper.readJs(path.join(testFolder, file.replace(/\.bin$/, '.js')));
-      var ret = dns.DNSPacket.parse(bin);
-      helper.equalDeep(js, ret);
-      helper.equalJs(js, ret);
-      done();
-    });
-  });
-}
-
-
 
 describe('DNSPacket', function () {
 
-  it('should be able to create a wildcard query', {only: true},
-  function (done) {
+  it('should be able to create a wildcard query', function (done) {
     var packet = new dns.DNSPacket();
     packet.header.rd = 0;
     var query = new dns.DNSRecord(
@@ -88,17 +54,65 @@ describe('DNSPacket', function () {
     done();
   });
 
-  describe('parsing fixtures', function () {
-    createParsingTests(fixtureDir);
+  it('should be able to create PTR answer', function (done) {
+    var packet = new dns.DNSPacket();
+    packet.header.rd = 0;
+    packet.header.qr = 1;
+    packet.header.aa = 1;
+    //query
+    var query = new dns.DNSRecord(
+      '_services._dns-sd._udp.local',
+      dns.DNSRecord.Type.PTR,
+      1
+    );
+    packet.question.push(query);
+
+    //answer
+    packet.answer.push({
+      name:'_services._dns-sd._udp.local', //reference to first record name
+      type: dns.DNSRecord.Type.PTR,
+      class: 1,
+      ttl: 10,
+      data: '_workstation._tcp.local'
+    });
+
+    packet.answer.push({
+      name:'_services._dns-sd._udp.local', //reference to first record name
+      type: dns.DNSRecord.Type.PTR,
+      class: 1,
+      ttl: 10,
+      data: '_udisks-ssh._tcp.local'
+    });
+
+    var buf = dns.DNSPacket.toBuffer(packet);
+
+    var pr = dns.DNSPacket.parse(buf);
+    var fixture = helper.readBin(
+      path.join(fixtureDir, 'mdns-inbound-linux_workstation.bin')
+    );
+
+    helper.equalDeep(pr, dns.DNSPacket.parse(fixture));
+
+
+    //helper.equalBuffer(fixture, buf, 8);
+
+    // //expect(buf.toString('hex')).to.equal(fixStr);
+
+    // var parsed = dns.DNSPacket.parse(buf);
+    done();
   });
 
-  describe('create fixtures', {skip:true}, function () {
-    createWritingTests(fixtureDir);
+  describe('parsing fixtures', function () {
+    helper.createParsingTests(lab, fixtureDir);
   });
+
+  // describe('create fixtures', {skip:true}, function () {
+  //   helper.createWritingTests(lab, fixtureDir);
+  // });
 
   describe('fixtures from native-dns-packet', function () {
     describe('parsing', function () {
-      createParsingTests(nativeFixtureDir);
+      helper.createParsingTests(lab, nativeFixtureDir);
     });
   });
 
