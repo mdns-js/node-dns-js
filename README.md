@@ -16,3 +16,15 @@ it even uses it's test fixtures and borrows some parts of it.
 This was made before i knew about native-dns-packet but since that
 still has some bugs in handling some mDNS packets I cant use it.
 
+example
+-------
+
+```javascript
+var dns = require('mnds-js-packet');
+
+/*some code that will get you a dns message buffer*/
+
+var result = dns.DNSPacket.parse(message);
+
+console.log(result);
+```

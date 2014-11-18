@@ -15,8 +15,7 @@ var dns = require('../');
 exports.createJs = function (obj) {
   // var j = JSON.stringify(obj);
   // obj = JSON.parse(j);
-  return util.inspect(obj, {depth: null})
-  .replace(/\[Getter\]/g, 'undefined');
+  return util.inspect(obj, {depth: null});
 };
 
 exports.writeBin = function (filename, buf) {
@@ -36,7 +35,7 @@ var readBin = exports.readBin = function (filename) {
 
 exports.prepareJs = function (text) {
   //replace <Buffer aa bb> with new Buffer("aabb", "hex")
-  var matches = text.match(/(<Buffer[ a-f0-9]*>)/g);
+  var matches = text.match(/(<Buffer[ a-f0-9\.]*>)/g);
   if (matches) {
     debug('matches', matches);
     matches.forEach(function (m) {
@@ -45,6 +44,7 @@ exports.prepareJs = function (text) {
       if (bytes !== null) {
         str = bytes.join('');
         str = str.replace(/ /g, '');
+        str = str.replace(/\./g, '');
       }
       var r = 'new Buffer("' + str + '", "hex")';
       text = text.replace(m, r);
