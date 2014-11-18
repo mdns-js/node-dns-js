@@ -1,4 +1,3 @@
-var Code = require('code');   // assertion library
 var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 
@@ -6,6 +5,7 @@ var describe = lab.describe;
 var it = lab.it;
 //var before = lab.before;
 //var after = lab.after;
+var Code = require('code');   // assertion library
 var expect = Code.expect;
 
 //var debug = require('debug')('mdns-packet:test:dns');
