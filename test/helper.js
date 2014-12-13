@@ -167,7 +167,7 @@ exports.createParsingTests = function (lab, testFolder) {
 };
 
 
-exports.createFileParsingTest = function (lab, binFile) {
+exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
   var it = lab.it;
 
   it('can parse ' + binFile, function (done) {
@@ -182,6 +182,12 @@ exports.createFileParsingTest = function (lab, binFile) {
       else {
         equalDeep(js, ret);
         //equalJs(js, ret);
+      }
+      // //roundtrip
+      if (withRoundtrip) {
+        debug('roundtrip. js to bin')
+        var newbin = dns.DNSPacket.toBuffer(ret);
+        expect(newbin).to.deep.equal(bin);
       }
       done();
     });

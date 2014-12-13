@@ -106,6 +106,10 @@ describe('DNSPacket', function () {
     helper.createParsingTests(lab, fixtureDir);
   });
 
+  describe('parsing fixtures with roundtrip', function () {
+    helper.createFileParsingTest(lab, 'test/fixtures/www.nodejs.org.cname.bin', true);
+  });
+
   // describe('create fixtures', {skip:true}, function () {
   //   helper.createWritingTests(lab, fixtureDir);
   // });
