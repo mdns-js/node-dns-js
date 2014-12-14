@@ -28,3 +28,11 @@ var result = dns.DNSPacket.parse(message);
 
 console.log(result);
 ```
+
+Contribute
+----------
+I will gladly accept any contributions as pull requests.
+Just run __npm run lint__ on the code first so that the coding style
+is kept somewhat consistent.
+I miss doing this myself from time to time and I won't go balistic if anyone
+else forget but I would really appretiate it.

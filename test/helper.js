@@ -185,7 +185,7 @@ exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
       }
       // //roundtrip
       if (withRoundtrip) {
-        debug('roundtrip. js to bin')
+        debug('roundtrip. js to bin');
         var newbin = dns.DNSPacket.toBuffer(ret);
         expect(newbin).to.deep.equal(bin);
       }
