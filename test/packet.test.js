@@ -102,6 +102,29 @@ describe('DNSPacket', function () {
     done();
   });
 
+
+  it('should parse SOA', function (done) {
+    var inbound = helper.readBin('test/fixtures/dns-soa.bin');
+    var packet = dns.DNSPacket.parse(inbound);
+    expect(packet.authority).to.have.length(1);
+
+    var auth = packet.authority[0];
+
+    expect(auth.type).to.equal(6);
+    expect(auth.typeName).to.equal('SOA');
+
+    expect(auth.primary).to.equal('ns1.google.com');
+    expect(auth.admin).to.equal('dns-admin.google.com');
+    expect(auth.serial).to.equal(1576192);
+    expect(auth.refresh).to.equal(7200);
+    expect(auth.retry).to.equal(1800);
+    expect(auth.expiration).to.equal(1209600);
+    expect(auth.minimum).to.equal(300);
+
+
+    done();
+  });
+
   describe('parsing fixtures', function () {
     helper.createParsingTests(lab, fixtureDir);
   });
@@ -109,6 +132,9 @@ describe('DNSPacket', function () {
   describe('parsing fixtures with roundtrip', function () {
     helper.createFileParsingTest(lab,
       'test/fixtures/www.nodejs.org.cname.bin', true);
+
+    helper.createFileParsingTest(lab,
+      'test/fixtures/dns-soa.bin', true);
   });
 
   // describe('create fixtures', {skip:true}, function () {
