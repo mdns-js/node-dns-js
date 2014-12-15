@@ -67,6 +67,10 @@ describe('BufferConsumer', function () {
     done();
   });
 
+});
+
+
+describe('BufferWriter', function () {
   it('#name on empty buffer', function (done) {
     var out = new BufferWriter();
     out.name('');
@@ -76,5 +80,4 @@ describe('BufferConsumer', function () {
     expect(s).to.equal('');
     done();
   });
-
 });

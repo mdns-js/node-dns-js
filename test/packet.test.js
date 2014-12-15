@@ -93,12 +93,16 @@ describe('DNSPacket', function () {
 
     helper.equalDeep(pr, dns.DNSPacket.parse(fixture));
 
-
     //helper.equalBuffer(fixture, buf, 8);
-
     // //expect(buf.toString('hex')).to.equal(fixStr);
-
     // var parsed = dns.DNSPacket.parse(buf);
+    done();
+  });
+
+
+  it('new packet with flags as input', function (done) {
+    var p = new dns.DNSPacket(0x40);
+    expect(p.header.res1).to.equal(1);
     done();
   });
 
@@ -121,8 +125,20 @@ describe('DNSPacket', function () {
     expect(auth.expiration).to.equal(1209600);
     expect(auth.minimum).to.equal(300);
 
+    done();
+  });
+
+  it('throw when question does not exist', function (done) {
+    var buf = new Buffer('0000840000010000000000000000000000', 'hex');
+    expect(fn).to.throw(dns.errors.MalformedPacket, 'Record.type is empty');
+
+    buf = new Buffer('0000840000010000000000000001000000', 'hex');
+    expect(fn).to.throw(dns.errors.MalformedPacket, 'Record.class is empty');
 
     done();
+    function fn() {
+      dns.parse(buf);
+    }
   });
 
   describe('parsing fixtures', function () {
@@ -140,6 +156,48 @@ describe('DNSPacket', function () {
   // describe('create fixtures', {skip:true}, function () {
   //   helper.createWritingTests(lab, fixtureDir);
   // });
+
+  describe('parsing exploits', function () {
+    it('zlip-1', function (done) {
+      var bin = helper.readBin('test/fixtures/exploits/zlip-1.bin');
+      expect(fn).to.throw(dns.errors.MalformedPacket,
+        'Unexpectedly big section count: 83258. Missing at least 416225 bytes.'
+      );
+      done();
+      function fn() {
+        dns.parse(bin);
+        done('should fail');
+      }
+    });
+
+    it('zlip-2', function (done) {
+      var bin = helper.readBin('test/fixtures/exploits/zlip-2.bin');
+      expect(fn).to.throw(dns.errors.MalformedPacket,
+        'Unexpectedly big section count: 83258. Missing at least 416225 bytes.'
+      );
+      done();
+      function fn() {
+        dns.parse(bin);
+        done('should fail');
+      }
+    });
+
+    it('zlip-3', function (done) {
+      var bin = helper.readBin('test/fixtures/exploits/zlip-3.bin');
+      expect(fn).to.throw(dns.errors.MalformedPacket,
+        'Unexpectedly big section count: 83258. Missing at least 416155 bytes.'
+      );
+      done();
+      function fn() {
+        dns.parse(bin);
+        done('should fail');
+      }
+    });
+  });//exploits
+
+  describe('create fixtures', {skip: true}, function () {
+    helper.createWritingTests(lab, fixtureDir);
+  });
 
   describe('fixtures from native-dns-packet', function () {
     describe('parsing', function () {

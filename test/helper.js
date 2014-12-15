@@ -151,7 +151,7 @@ exports.createWritingTests = function (lab, testFolder) {
       var bin = readBin(binFile);
       var rtrip = dns.DNSPacket.parse(buff);
       expect(buff).to.have.length(bin.length);
-      expect(buff).to.be.equal(bin);
+      expect(buff).to.be.deep.equal(bin);
       equalDeep(js, rtrip);
       done();
     });
