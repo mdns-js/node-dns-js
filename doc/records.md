@@ -1,5 +1,9 @@
 
+Record types
+============
 
+A usefull list of record types can be found at 
+https://en.wikipedia.org/wiki/List_of_DNS_record_types
 
 A - 1
 -----

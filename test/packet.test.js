@@ -142,6 +142,18 @@ describe('DNSPacket', function () {
   });
 
   describe('parsing fixtures', function () {
+    it('should do edns OPT RR', {only: true}, function (done) {
+      var bin = helper.readBin('test/fixtures/mdns-inbound-apple-mobdev.bin');
+      var p = dns.parse(bin);
+      //check for opt
+      expect(p.additional).to.have.length(1);
+      var opt = p.additional[0].opt;
+      expect(opt).to.include(['code', 'z', 'version', 'rcode', 'data', 'do']);
+      expect(opt.code, 'code').to.equal(4);
+      expect(opt.z, 'z').to.equal(4500);
+      done();
+    });
+
     helper.createParsingTests(lab, fixtureDir);
   });
 
@@ -195,9 +207,9 @@ describe('DNSPacket', function () {
     });
   });//exploits
 
-  describe('create fixtures', {skip: true}, function () {
-    helper.createWritingTests(lab, fixtureDir);
-  });
+  // describe('create fixtures', {skip: true}, function () {
+  //   helper.createWritingTests(lab, fixtureDir);
+  // });
 
   describe('fixtures from native-dns-packet', function () {
     describe('parsing', function () {
