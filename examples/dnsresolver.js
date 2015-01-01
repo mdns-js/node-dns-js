@@ -28,7 +28,7 @@ function resolveAddress(name) {
   });
 
   s.on('message', function (data) {
-    console.log('incomming response');
+    console.log('incoming response');
     var response = dns.DNSPacket.parse(data);
     response.answer.forEach(function (a) {
       console.log('answer type:%s, class:%s, name:%s',
