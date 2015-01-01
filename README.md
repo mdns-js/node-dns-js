@@ -31,6 +31,8 @@ var result = dns.DNSPacket.parse(message);
 console.log(result);
 ```
 
+Look at examples/dnsresolver.js for a more detailed example.
+
 Contribute
 ----------
 I will gladly accept any contributions as pull requests.
