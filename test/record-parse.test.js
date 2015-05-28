@@ -49,8 +49,8 @@ describe('DNSRecord (Parse)', function () {
       done();
     });
   });//OPT
-  
-  
+
+
   describe('A - TTL', function () {
     it('parse A TTL=0', function (done) {
       var buf = new Buffer('00000180010000000000040a500a22',
@@ -69,6 +69,5 @@ describe('DNSRecord (Parse)', function () {
       expect(r.ttl).to.equal(20);
       done();
     });
-
   });//A-TTL
 });
