@@ -69,7 +69,7 @@ describe('DNSPacket', function () {
 
     //answer
     packet.answer.push({
-      name:'_services._dns-sd._udp.local', //reference to first record name
+      name: '_services._dns-sd._udp.local', //reference to first record name
       type: dns.DNSRecord.Type.PTR,
       class: 1,
       ttl: 10,
@@ -77,7 +77,7 @@ describe('DNSPacket', function () {
     });
 
     packet.answer.push({
-      name:'_services._dns-sd._udp.local', //reference to first record name
+      name: '_services._dns-sd._udp.local', //reference to first record name
       type: dns.DNSRecord.Type.PTR,
       class: 1,
       ttl: 10,

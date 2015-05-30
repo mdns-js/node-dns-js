@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "test": "lab --coverage --flat",
-    "lint": "jshint lib examples test/*.js index.js && jscs examples lib test/*.js index.js"
+    "lint": "eslint ."
   },
   "author": "Peter Magnusson <peter@birchroad.net>",
   "license": "MIT",
@@ -23,8 +23,7 @@
   },
   "devDependencies": {
     "code": "^1.2.1",
-    "jscs": "^1.7.3",
-    "jshint": "^2.5.6",
+    "eslint": "^0.21.2",
     "lab": "^5.0.2",
     "native-dns-packet": "0.1.1"
   }

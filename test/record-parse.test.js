@@ -45,7 +45,7 @@ describe('DNSRecord (Parse)', function () {
       var buf = new Buffer('00002905a000009194000c00040008000008002700d4b4',
         'hex');
       var r = DNSRecord.parse(buf);
-      expect(r.opt['do'], 'do').to.equal(1);
+      expect(r.opt.do, 'do').to.equal(1);
       done();
     });
   });//OPT

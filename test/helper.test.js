@@ -34,7 +34,7 @@ describe('helper', function () {
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');
     var text = fs.readFileSync(filename, 'utf8');
     var js = helper.prepareJs(text);
-    expect(js).to.be.a.String;
+    expect(js).to.be.a.string();
     expect(js).to.match(/new Buffer\(/);
     done();
   });

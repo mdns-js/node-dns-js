@@ -1,8 +1,7 @@
 var debug = require('debug')('mdns-packet:test:helper');
 var Code = require('code');   // assertion library
-
 var expect = Code.expect;
-var debug = require('debug')('mdns-packet:test:helper');
+
 var fs = require('fs');
 var vm = require('vm');
 var util = require('util');
@@ -127,7 +126,7 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
         equalDeep(e, a, dp(np, key));
       }
       else {
-        debug('it is not a Buffer or object that we are expecting')
+        debug('it is not a Buffer or object that we are expecting');
         if (key !== 'name') {
           var atype = typeof a;
           if (atype === 'undefined') {

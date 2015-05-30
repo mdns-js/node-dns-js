@@ -16,7 +16,7 @@ describe('BufferConsumer', function () {
 
   it('throw if no buffer as argument', function (done) {
     var throws = function () {
-      (new BufferConsumer());
+      return (new BufferConsumer());
     };
 
     expect(throws).to.throw(Error, 'Expected instance of Buffer');

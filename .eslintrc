@@ -1,0 +1,25 @@
+{
+	"env": {
+		"browser": true,
+		"node": true,
+		"mocha": true
+	},
+	"rules" : {
+		"quotes": [2, "single"],
+		"eqeqeq": [2],
+		"brace-style": [2, "stroustrup", { "allowSingleLine": true }],
+		"no-use-before-define": [0],
+		"no-trailing-spaces": [2],
+		"space-before-blocks": [2],
+		"max-len": [2, 120, 4],
+		"indent": [2, 2],
+		"space-after-keywords": [2, "always"],
+		"space-unary-ops": [2],
+		"no-underscore-dangle": [0],
+		"strict": [0],
+		"camelcase": [0],
+		"no-shadow": [0]
+
+
+	}
+}
