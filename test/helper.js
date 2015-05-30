@@ -91,17 +91,29 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
 
   for (var key in expected) {
     if (expected.hasOwnProperty(key)) {
-      debug('looking at %s in %s', key, path);
+      debug('looking at key `%s` in `%s`', key, path);
+      if (key === 'payload') {
+        debug('payload is deprecated!!!');
+        continue;
+      }
       if (actual instanceof Array) {
         expect(actual[key]).to.exist();
       }
       else {
-        debug('actual', actual);
+        debug('actual value `%j`. expecting it to include key:`%s`...', actual, key);
         expect(actual, path).to.include(key);
+        debug('...it did');
       }
       var a = actual[key];
       var e = expected[key];
-      var prop = Object.getOwnPropertyDescriptor(actual, key);
+      var prop;
+      try {
+        prop = Object.getOwnPropertyDescriptor(actual, key);
+      }
+      catch (e) {
+        console.error('key:`%s`, actual:`%s` of type `%s` got an error', key, actual, typeof actual, e);
+        throw e;
+      }
       if (e instanceof Buffer) {
         expect(a, 'not matching length of ' + dp(np, key))
         .to.have.length(e.length);
@@ -110,13 +122,16 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
         .to.equal(e.toString('hex'));
       }
       else if (typeof e === 'object') {
+        debug('expected is an `object` and actual is `%s`', typeof a);
+        expect(typeof a).not.to.equal('string');
         equalDeep(e, a, dp(np, key));
       }
       else {
+        debug('it is not a Buffer or object that we are expecting')
         if (key !== 'name') {
           var atype = typeof a;
           if (atype === 'undefined') {
-            expect(atype).to.equal(typeof e);
+            expect(atype, util.format('type of key `%s` as unexpected', key)).to.equal(typeof e);
           }
           else {
             //don't test getters

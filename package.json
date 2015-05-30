@@ -26,6 +26,6 @@
     "jscs": "^1.7.3",
     "jshint": "^2.5.6",
     "lab": "^5.0.2",
-    "native-dns-packet": "0.0.4"
+    "native-dns-packet": "0.1.1"
   }
 }
