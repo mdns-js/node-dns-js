@@ -1,25 +1,21 @@
 {
 	"env": {
-		"browser": true,
-		"node": true,
-		"mocha": true
+		"node": true
 	},
 	"rules" : {
-		"quotes": [2, "single"],
-		"eqeqeq": [2],
 		"brace-style": [2, "stroustrup", { "allowSingleLine": true }],
-		"no-use-before-define": [0],
-		"no-trailing-spaces": [2],
-		"space-before-blocks": [2],
-		"max-len": [2, 120, 4],
-		"indent": [2, 2],
-		"space-after-keywords": [2, "always"],
-		"space-unary-ops": [2],
-		"no-underscore-dangle": [0],
-		"strict": [0],
 		"camelcase": [0],
-		"no-shadow": [0]
-
-
+		"curly": [2],
+		"eqeqeq": [2],
+		"indent": [2, 2, {"SwitchCase": 1}],
+		"max-len": [2, 120, 4, {"ignoreComments": true, "ignoreUrls": true}],
+		"no-shadow": [1],
+		"no-trailing-spaces": [2],
+		"quotes": [2, "single"],
+		"semi": [2, "always"],
+		"space-after-keywords": [2, "always"],
+		"space-before-blocks": [2],
+		"space-infix-ops": [2],
+        "space-unary-ops": [2]
 	}
 }

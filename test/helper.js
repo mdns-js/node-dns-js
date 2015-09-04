@@ -81,16 +81,16 @@ exports.equalBuffer = function (expected, actual, start) {
   }
 };
 
-var equalDeep = exports.equalDeep = function (expected, actual, path) {
+var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
 
-  var np = path || 'root';
+  var np = objpath || 'root';
   function dp (a, b) {
     return a + '.' + b;
   }
 
   for (var key in expected) {
     if (expected.hasOwnProperty(key)) {
-      debug('looking at key `%s` in `%s`', key, path);
+      debug('looking at key `%s` in `%s`', key, objpath);
       if (key === 'payload') {
         debug('payload is deprecated!!!');
         continue;
@@ -100,7 +100,7 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
       }
       else {
         debug('actual value `%j`. expecting it to include key:`%s`...', actual, key);
-        expect(actual, path).to.include(key);
+        expect(actual, objpath).to.include(key);
         debug('...it did');
       }
       var a = actual[key];
@@ -109,9 +109,9 @@ var equalDeep = exports.equalDeep = function (expected, actual, path) {
       try {
         prop = Object.getOwnPropertyDescriptor(actual, key);
       }
-      catch (e) {
-        console.error('key:`%s`, actual:`%s` of type `%s` got an error', key, actual, typeof actual, e);
-        throw e;
+      catch (err) {
+        console.error('key:`%s`, actual:`%s` of type `%s` got an error', key, actual, typeof actual, err);
+        throw err;
       }
       if (e instanceof Buffer) {
         expect(a, 'not matching length of ' + dp(np, key))
