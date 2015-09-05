@@ -6,7 +6,7 @@ var helper = require('./helper');
 describe('single', function () {
   if (process.env.SINGLE) {
     describe('parsing', function () {
-      helper.createFileParsingTest(lab, process.env.SINGLE);
+      helper.createFileParsingTest(lab, process.env.SINGLE, true);
     });
   }
 });

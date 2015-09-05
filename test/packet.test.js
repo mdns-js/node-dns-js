@@ -141,6 +141,21 @@ describe('DNSPacket', function () {
     }
   });
 
+  it('should create reverse lookup', function (done) {
+    var expected = '2aa601000001000000000000013801380138013807696e2d61646472046172706100000c0001';
+    var r = new dns.DNSRecord(
+      '8.8.8.8.in-addr.arpa',
+      dns.DNSRecord.Type.PTR,
+      dns.DNSRecord.Class.IN);
+
+    var packet = new dns.DNSPacket();
+    packet.header.id = 0x2aa6;
+    packet.question.push(r);
+    var buf = dns.DNSPacket.toBuffer(packet);
+    expect(buf.toString('hex')).to.equal(expected);
+    done();
+  });
+
   describe('parsing fixtures', function () {
 
     describe('basic tests', function () {

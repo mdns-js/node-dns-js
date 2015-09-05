@@ -22,9 +22,9 @@
     "qap": "^3.1.2"
   },
   "devDependencies": {
-    "code": "^1.2.1",
-    "eslint": "^0.21.2",
-    "lab": "^5.0.2",
+    "code": "*",
+    "eslint": "*",
+    "lab": "*",
     "native-dns-packet": "0.1.1"
   }
 }

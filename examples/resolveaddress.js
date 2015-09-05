@@ -1,4 +1,4 @@
-
+/*eslint no-console:0*/
 var dns = require('..');
 var dgram = require('dgram');
 

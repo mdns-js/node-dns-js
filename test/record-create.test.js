@@ -78,4 +78,18 @@ describe('DNSRecord (Create)', function () {
     done();
   });
 
+  it('reverse lookup', function (done) {
+
+    var rec = '013801380138013807696e2d61646472046172706100000c0001';
+    var r = new DNSRecord(
+      '8.8.8.8.in-addr.arpa',
+      DNSRecord.Type.PTR,
+      DNSRecord.Class.IN);
+    var bw = new BufferWriter();
+    var b = DNSRecord.write(bw, r, true).dump();
+    var recStr = b.toString('hex');
+    expect(recStr).to.equal(rec);
+    done();
+  });
+
 });

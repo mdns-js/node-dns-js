@@ -1,3 +1,4 @@
+/*eslint no-console: 0*/
 var debug = require('debug')('mdns-packet:test:helper');
 var Code = require('code');   // assertion library
 var expect = Code.expect;
