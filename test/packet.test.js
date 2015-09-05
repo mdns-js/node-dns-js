@@ -14,6 +14,8 @@ var path = require('path');
 
 var helper = require('./helper');
 var dns = require('../');
+var DNSRecord = dns.DNSRecord;
+var DNSPacket = dns.DNSPacket;
 
 var fixtureDir = path.join(__dirname, 'fixtures');
 var nativeFixtureDir = path.join(__dirname, '..', 'node_modules',
@@ -143,18 +145,66 @@ describe('DNSPacket', function () {
 
   it('should create reverse lookup', function (done) {
     var expected = '2aa601000001000000000000013801380138013807696e2d61646472046172706100000c0001';
-    var r = new dns.DNSRecord(
-      '8.8.8.8.in-addr.arpa',
-      dns.DNSRecord.Type.PTR,
-      dns.DNSRecord.Class.IN);
-
     var packet = new dns.DNSPacket();
     packet.header.id = 0x2aa6;
-    packet.question.push(r);
+    packet.question.push(new dns.DNSRecord(
+      '8.8.8.8.in-addr.arpa',
+      dns.DNSRecord.Type.PTR,
+      dns.DNSRecord.Class.IN));
     var buf = dns.DNSPacket.toBuffer(packet);
     expect(buf.toString('hex')).to.equal(expected);
+    packet = dns.DNSPacket.parse(buf);
     done();
   });
+
+  it('should create another reverse lookup', function (done) {
+    var expected = '10920100000100000000000002353103313637033231310331343007696e2d61646472046172706100000c0001';
+    var packet = new dns.DNSPacket();
+    packet.header.id = 4242;
+    packet.question.push(new dns.DNSRecord(
+      '51.167.211.140.in-addr.arpa.',
+      dns.DNSRecord.Type.PTR,
+      dns.DNSRecord.Class.IN)
+    );
+    expect(packet.question[0].type).to.equal(dns.DNSRecord.Type.PTR);
+
+    var buf = dns.DNSPacket.toBuffer(packet);
+    expect(buf.toString('hex')).to.equal(expected);
+    //roundtrpip
+    packet = dns.DNSPacket.parse(buf);
+    done();
+  });
+
+  it('same regardless of id', function (done) {
+    var expected1 = '10920100000100000000000002353103313637033231310331343007696e2d61646472046172706100000c0001';
+    var expected2 = '00000100000100000000000002353103313637033231310331343007696e2d61646472046172706100000c0001';
+    //               00000100000100000000000002353103313637033231310331343007696e2d6164647204617270610000000c0001;
+
+    var r = new DNSRecord(
+      '51.167.211.140.in-addr.arpa.',
+      DNSRecord.Type.PTR,
+      DNSRecord.Class.IN);
+
+    //packet with id
+    var p1 = new DNSPacket();
+    p1.header.id = 4242;
+    p1.question.push(r);
+    // console.log('with');
+    var buf1 = DNSPacket.toBuffer(p1);
+    expect(buf1.toString('hex'), 'buf1').to.equal(expected1);
+
+    //packet without id
+    var p2 = new DNSPacket();
+    p2.question.push(r);
+    // console.log('without');
+    var buf2 = DNSPacket.toBuffer(p2);
+    expect(buf2.toString('hex'), 'buf2').to.equal(expected2);
+
+    done();
+  });
+
+
+
 
   describe('parsing fixtures', function () {
 

@@ -92,4 +92,21 @@ describe('DNSRecord (Create)', function () {
     done();
   });
 
+  it('reverse lookup 2', function (done) {
+    var expected = '02353103313637033231310331343007696e2d61646472046172706100000c0001';
+    //             '02353103313637033231310331343007696e2d616464720461727061 00000c0001'
+    //                 5 1   1 6 7   2 1 1   1 3 0   i n - a d d r   a r p a
+    var r = new DNSRecord(
+      '51.167.211.140.in-addr.arpa.',
+      DNSRecord.Type.PTR,
+      DNSRecord.Class.IN);
+
+    var bw = new BufferWriter();
+    var buf = DNSRecord.write(bw, r, true).dump();
+    expect(buf.toString('hex')).to.equal(expected);
+    var r2 = DNSRecord.parseQuestion(buf);
+    expect(r2.type).to.equal(DNSRecord.Type.PTR);
+    done();
+  });
+
 });

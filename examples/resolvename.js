@@ -4,7 +4,7 @@ var dgram = require('dgram');
 
 var DNSSERVER = '8.8.8.8';
 
-resolveName('8.8.8.4');
+resolveName('140.211.167.51');
 
 function resolveName(address) {
   var packet = new dns.DNSPacket();
