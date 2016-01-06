@@ -1,11 +1,18 @@
 mdns-js-packet
 ==============
 
-[![Build Status](https://travis-ci.org/mdns-js/node-mdns-js-packet.svg?branch=master)](https://travis-ci.org/mdns-js/node-mdns-js-packet)
+[![Build Status](https://travis-ci.org/mdns-js/node-dns-js.svg?branch=master)](https://travis-ci.org/mdns-js/node-dns-js)
 
 DNS packet parser specifically built for mdns-js 
 [mdns-js](https://github.com/kmpm/node-mdns-js) 
 but it should be generic enough to do general dns stuff.
+
+NEW LOCATION
+
+This project was moved into it's own organisation. Please update any git remotes you might have pointing here.
+
+    git remote set-url origin https://github.com/mdns-js/node-dns-js.git
+
 
 
 You probably want to have a look at 
@@ -22,7 +29,7 @@ example
 -------
 
 ```javascript
-var dns = require('mnds-js-packet');
+var dns = require('dns-js');
 
 /*some code that will get you a dns message buffer*/
 

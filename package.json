@@ -1,11 +1,11 @@
 {
-  "name": "mdns-js-packet",
-  "version": "0.2.0",
+  "name": "dns-js",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kmpm/node-mdns-js-packet.git"
+    "url": "https://github.com/mdns-js/node-dns-js.git"
   },
-  "description": "DNS Packet handling for mdns-js",
+  "description": "DNS Packet handling in pure javascript",
   "engines": {
     "node": ">= 4.1.0"
   },
@@ -17,9 +17,9 @@
   "author": "Peter Magnusson <peter@birchroad.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kmpm/node-mdns-js-packet/issues"
+    "url": "https://github.com/mdns-js/node-dns-js/issues"
   },
-  "homepage": "https://github.com/kmpm/node-mdns-js-packet",
+  "homepage": "https://github.com/mdns-js/node-dns-js",
   "dependencies": {
     "debug": "^2.1.0",
     "qap": "^3.1.2"
