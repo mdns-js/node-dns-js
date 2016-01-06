@@ -3,8 +3,7 @@ dns-js
 
 [![Build Status](https://travis-ci.org/mdns-js/node-dns-js.svg?branch=master)](https://travis-ci.org/mdns-js/node-dns-js)
 
-DNS packet parser specifically built for mdns-js 
-[mdns-js](https://github.com/kmpm/node-mdns-js) 
+DNS packet parser specifically built for [mdns-js](https://github.com/mdns-js/node-mdns-js) 
 but it should be generic enough to do general dns stuff.
 
 NEW LOCATION
