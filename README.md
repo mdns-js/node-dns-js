@@ -1,4 +1,4 @@
-mdns-js-packet
+dns-js
 ==============
 
 [![Build Status](https://travis-ci.org/mdns-js/node-dns-js.svg?branch=master)](https://travis-ci.org/mdns-js/node-dns-js)
@@ -9,7 +9,8 @@ but it should be generic enough to do general dns stuff.
 
 NEW LOCATION
 
-This project was moved into it's own organisation. Please update any git remotes you might have pointing here.
+This project was moved into it's own organisation and changed name from node-mdns-js-packet to node-dns-js. 
+Please update any git remotes you might have pointing here.
 
     git remote set-url origin https://github.com/mdns-js/node-dns-js.git
 
@@ -19,7 +20,7 @@ You probably want to have a look at
 [native-dns-packet](https://github.com/tjfontaine/native-dns-packet)
 first and if that does do what you need, you might start looking at this.
 
-mdns-js-packet should produce the same output as native-dns-packet,
+dns-js should produce the same output as native-dns-packet,
 it even uses it's test fixtures and borrows some parts of it.
 
 This was made before i knew about native-dns-packet but since that
