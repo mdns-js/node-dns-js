@@ -1,7 +1,7 @@
 mdns-js-packet
 ==============
 
-[![Build Status](https://travis-ci.org/kmpm/node-mdns-js-packet.svg?branch=master)](https://travis-ci.org/kmpm/node-mdns-js-packet)
+[![Build Status](https://travis-ci.org/mdns-js/node-mdns-js-packet.svg?branch=master)](https://travis-ci.org/mdns-js/node-mdns-js-packet)
 
 DNS packet parser specifically built for mdns-js 
 [mdns-js](https://github.com/kmpm/node-mdns-js) 
