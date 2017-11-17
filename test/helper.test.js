@@ -29,40 +29,35 @@ var packets = require('./packets.json');
 
 describe('helper', function () {
 
-  it('prepareJs', function (done) {
+  it('prepareJs', function () {
     //this is a tricky one
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');
     var text = fs.readFileSync(filename, 'utf8');
     var js = helper.prepareJs(text);
     expect(js).to.be.a.string();
     expect(js).to.match(/new Buffer\(/);
-    done();
   });
 
-  it('readJs', function (done) {
+  it('readJs', function () {
     var filename = path.join(__dirname, 'fixtures', 'mdns-inbound-type47.js');
     var js = helper.readJs(filename);
     expect(js).to.exist();
     expect(js).to.include('header');
-    done();
   });
 
-  it('readBin', function (done) {
+  it('readBin', function () {
     var filename = path.join(__dirname, 'fixtures', 'mdns-readynas.bin');
     var b = helper.readBin(filename);
     expect(b).to.be.instanceOf(Buffer);
-    done();
   });
 
   describe('from buffer', function () {
     var b = new Buffer(packets.in.sample10, 'hex');
-    it('writeJs', function (done) {
+    it('writeJs', function () {
       helper.writeBin(path.join('./', 'test.bin.log'), b);
-      done();
     });
-    it('writeJs', function (done) {
+    it('writeJs', function () {
       helper.writeJs(path.join('./', 'test.js.log'), Packet.parse(b));
-      done();
     });
   });
 

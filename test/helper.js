@@ -185,7 +185,7 @@ exports.createParsingTests = function (lab, testFolder) {
 exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
   var it = lab.it;
 
-  it('can parse ' + binFile, function (done) {
+  it('can parse ' + binFile, function () {
       var bin = readBin(binFile);
       var jsfile = binFile.replace(/\.bin$/, '.js');
       var js = readJs(jsfile);
@@ -202,8 +202,7 @@ exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
       if (withRoundtrip) {
         debug('roundtrip. js to bin');
         var newbin = dns.DNSPacket.toBuffer(ret);
-        expect(newbin).to.deep.equal(bin);
+        expect(newbin).to.equal(bin);
       }
-      done();
     });
 };
