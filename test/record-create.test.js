@@ -51,7 +51,7 @@ describe('DNSRecord (Create)', function () {
 
     expect(recStr, 'type, class, ttl').to.include('002100010000000a');
     expect(recStr, 'srv data').to.include('00010002000905726567696e');
-                             //002100010000000a0013000000010002000905726567696e056c6f63616c00
+    //002100010000000a0013000000010002000905726567696e056c6f63616c00
     //roundtrip
     var pr = DNSRecord.parse(b);
     expect(pr).to.include(['port', 'target', 'weight', 'priority']);

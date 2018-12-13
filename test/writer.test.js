@@ -16,7 +16,7 @@ describe('BufferWriter', function () {
   it('should default to a 512 byte buffer', function () {
     var out = new BufferWriter();
     expect(out.buf).to.have.length(512);
-    
+
   });
 
   it('should default to a 512 byte buffer', function () {

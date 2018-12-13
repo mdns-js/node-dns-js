@@ -247,7 +247,6 @@ describe('DNSPacket', function () {
 
       function fn() {
         dns.parse(bin);
-        done('should fail');
       }
     });
 
@@ -259,7 +258,6 @@ describe('DNSPacket', function () {
 
       function fn() {
         dns.parse(bin);
-        done('should fail');
       }
     });
 
@@ -271,7 +269,6 @@ describe('DNSPacket', function () {
 
       function fn() {
         dns.parse(bin);
-        done('should fail');
       }
     });
   });//exploits

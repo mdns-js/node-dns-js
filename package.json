@@ -11,7 +11,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "lab --coverage --flat",
+    "test": "lab --coverage --flat & npm run lint",
     "lint": "eslint ."
   },
   "author": "Peter Magnusson <peter@birchroad.net>",
@@ -25,9 +25,9 @@
     "qap": "^3.1.2"
   },
   "devDependencies": {
-    "code": "*",
-    "eslint": "*",
-    "lab": "*",
+    "code": "^5.2.4",
+    "eslint": "^5.10.0",
+    "lab": "^18.0.0",
     "native-dns-packet": "0.1.1"
   }
 }

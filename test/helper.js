@@ -1,4 +1,4 @@
-/*eslint no-console: 0*/
+/*eslint no-console: off*/
 var debug = require('debug')('mdns-packet:test:helper');
 var Code = require('code');   // assertion library
 var expect = Code.expect;
@@ -35,7 +35,7 @@ var readBin = exports.readBin = function (filename) {
 
 exports.prepareJs = function (text) {
   //replace <Buffer aa bb> with new Buffer("aabb", "hex")
-  var matches = text.match(/(<Buffer[ a-f0-9\.]*>)/g);
+  var matches = text.match(/(<Buffer[ a-f0-9.]*>)/g);
   if (matches) {
     debug('matches', matches);
     matches.forEach(function (m) {
@@ -116,10 +116,10 @@ var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
       }
       if (e instanceof Buffer) {
         expect(a, 'not matching length of ' + dp(np, key))
-        .to.have.length(e.length);
+          .to.have.length(e.length);
 
         expect(a.toString('hex'), 'buffer not same in ' + dp(np, key))
-        .to.equal(e.toString('hex'));
+          .to.equal(e.toString('hex'));
       }
       else if (typeof e === 'object') {
         debug('expected is an `object` and actual is `%s`', typeof a);
@@ -143,7 +143,7 @@ var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
         }
         else {
           expect(a, util.format('wrong length of %s', dp(np, key)))
-          .to.have.length(e.length);
+            .to.have.length(e.length);
           debug('actual: %s, expected: %s', a, e);
         }
       }
@@ -186,23 +186,23 @@ exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
   var it = lab.it;
 
   it('can parse ' + binFile, function () {
-      var bin = readBin(binFile);
-      var jsfile = binFile.replace(/\.bin$/, '.js');
-      var js = readJs(jsfile);
-      var ret = dns.DNSPacket.parse(bin);
-      debug(binFile, ret);
-      if (!js) {
-        writeJs(jsfile, ret);
-      }
-      else {
-        equalDeep(js, ret);
-        //equalJs(js, ret);
-      }
-      // //roundtrip
-      if (withRoundtrip) {
-        debug('roundtrip. js to bin');
-        var newbin = dns.DNSPacket.toBuffer(ret);
-        expect(newbin).to.equal(bin);
-      }
-    });
+    var bin = readBin(binFile);
+    var jsfile = binFile.replace(/\.bin$/, '.js');
+    var js = readJs(jsfile);
+    var ret = dns.DNSPacket.parse(bin);
+    debug(binFile, ret);
+    if (!js) {
+      writeJs(jsfile, ret);
+    }
+    else {
+      equalDeep(js, ret);
+      //equalJs(js, ret);
+    }
+    // //roundtrip
+    if (withRoundtrip) {
+      debug('roundtrip. js to bin');
+      var newbin = dns.DNSPacket.toBuffer(ret);
+      expect(newbin).to.equal(bin);
+    }
+  });
 };
