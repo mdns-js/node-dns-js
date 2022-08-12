@@ -1,6 +1,6 @@
-/*eslint no-console: 0*/
+/*eslint no-console: 0 no-useless-escape: 1*/
 var debug = require('debug')('mdns-packet:test:helper');
-var Code = require('code');   // assertion library
+var Code = require('@hapi/code');   // assertion library
 var expect = Code.expect;
 
 var fs = require('fs');
@@ -34,7 +34,7 @@ var readBin = exports.readBin = function (filename) {
 };
 
 exports.prepareJs = function (text) {
-  //replace <Buffer aa bb> with new Buffer("aabb", "hex")
+  //replace <Buffer aa bb> with Buffer.from("aabb", "hex")
   var matches = text.match(/(<Buffer[ a-f0-9\.]*>)/g);
   if (matches) {
     debug('matches', matches);
@@ -46,7 +46,7 @@ exports.prepareJs = function (text) {
         str = str.replace(/ /g, '');
         str = str.replace(/\./g, '');
       }
-      var r = 'new Buffer("' + str + '", "hex")';
+      var r = 'Buffer.from("' + str + '", "hex")';
       text = text.replace(m, r);
     });
   }
@@ -90,7 +90,7 @@ var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
   }
 
   for (var key in expected) {
-    if (expected.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(expected, key)) {
       debug('looking at key `%s` in `%s`', key, objpath);
       if (key === 'payload') {
         debug('payload is deprecated!!!');
@@ -116,10 +116,10 @@ var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
       }
       if (e instanceof Buffer) {
         expect(a, 'not matching length of ' + dp(np, key))
-        .to.have.length(e.length);
+          .to.have.length(e.length);
 
         expect(a.toString('hex'), 'buffer not same in ' + dp(np, key))
-        .to.equal(e.toString('hex'));
+          .to.equal(e.toString('hex'));
       }
       else if (typeof e === 'object') {
         debug('expected is an `object` and actual is `%s`', typeof a);
@@ -143,7 +143,7 @@ var equalDeep = exports.equalDeep = function (expected, actual, objpath) {
         }
         else {
           expect(a, util.format('wrong length of %s', dp(np, key)))
-          .to.have.length(e.length);
+            .to.have.length(e.length);
           debug('actual: %s, expected: %s', a, e);
         }
       }
@@ -158,7 +158,7 @@ exports.createWritingTests = function (lab, testFolder) {
 
   var files = fs.readdirSync(testFolder).filter(function (f) { return /\.js$/.test(f); });
   files.forEach(function (file) {
-    it('can write ' + file, function (done) {
+    it('can write ' + file, function () {
       var js = readJs(path.join(testFolder, file));
       expect(js).to.exist();
       var buff = dns.DNSPacket.toBuffer(js);
@@ -168,7 +168,7 @@ exports.createWritingTests = function (lab, testFolder) {
       expect(buff).to.have.length(bin.length);
       expect(buff).to.be.deep.equal(bin);
       equalDeep(js, rtrip);
-      done();
+
     });
   });
 };
@@ -185,25 +185,25 @@ exports.createParsingTests = function (lab, testFolder) {
 exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
   var it = lab.it;
 
-  it('can parse ' + binFile, function (done) {
-      var bin = readBin(binFile);
-      var jsfile = binFile.replace(/\.bin$/, '.js');
-      var js = readJs(jsfile);
-      var ret = dns.DNSPacket.parse(bin);
-      debug(binFile, ret);
-      if (!js) {
-        writeJs(jsfile, ret);
-      }
-      else {
-        equalDeep(js, ret);
-        //equalJs(js, ret);
-      }
-      // //roundtrip
-      if (withRoundtrip) {
-        debug('roundtrip. js to bin');
-        var newbin = dns.DNSPacket.toBuffer(ret);
-        expect(newbin).to.deep.equal(bin);
-      }
-      done();
-    });
+  it('can parse ' + binFile, function () {
+    var bin = readBin(binFile);
+    var jsfile = binFile.replace(/\.bin$/, '.js');
+    var js = readJs(jsfile);
+    var ret = dns.DNSPacket.parse(bin);
+    debug(binFile, ret);
+    if (!js) {
+      writeJs(jsfile, ret);
+    }
+    else {
+      equalDeep(js, ret);
+      //equalJs(js, ret);
+    }
+    // //roundtrip
+    if (withRoundtrip) {
+      debug('roundtrip. js to bin');
+      var newbin = dns.DNSPacket.toBuffer(ret);
+      expect(newbin).to.equal(bin);
+    }
+
+  });
 };

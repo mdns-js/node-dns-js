@@ -1,20 +1,20 @@
 {
   "name": "dns-js",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/mdns-js/node-dns-js.git"
   },
   "description": "DNS Packet handling in pure javascript",
   "engines": {
-    "node": ">= 4.1.0"
+    "node": ">= 14.x"
   },
   "main": "index.js",
   "scripts": {
     "test": "lab --coverage --flat",
     "lint": "eslint ."
   },
-  "author": "Peter Magnusson <peter@birchroad.net>",
+  "author": "Peter Magnusson <me@kmpm.se>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/mdns-js/node-dns-js/issues"
@@ -25,9 +25,9 @@
     "qap": "^3.1.2"
   },
   "devDependencies": {
-    "code": "*",
+    "@hapi/code": "*",
     "eslint": "*",
-    "lab": "*",
+    "@hapi/lab": "*",
     "native-dns-packet": "0.1.1"
   }
 }
