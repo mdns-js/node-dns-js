@@ -1,6 +1,6 @@
 /*eslint no-console: 0*/
 var debug = require('debug')('mdns-packet:test:helper');
-var Code = require('code');   // assertion library
+var Code = require('@hapi/code');   // assertion library
 var expect = Code.expect;
 
 var fs = require('fs');
@@ -158,7 +158,7 @@ exports.createWritingTests = function (lab, testFolder) {
 
   var files = fs.readdirSync(testFolder).filter(function (f) { return /\.js$/.test(f); });
   files.forEach(function (file) {
-    it('can write ' + file, function (done) {
+    it('can write ' + file, function () {
       var js = readJs(path.join(testFolder, file));
       expect(js).to.exist();
       var buff = dns.DNSPacket.toBuffer(js);
@@ -168,7 +168,7 @@ exports.createWritingTests = function (lab, testFolder) {
       expect(buff).to.have.length(bin.length);
       expect(buff).to.be.deep.equal(bin);
       equalDeep(js, rtrip);
-      done();
+      
     });
   });
 };
@@ -185,7 +185,7 @@ exports.createParsingTests = function (lab, testFolder) {
 exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
   var it = lab.it;
 
-  it('can parse ' + binFile, function (done) {
+  it('can parse ' + binFile, function () {
       var bin = readBin(binFile);
       var jsfile = binFile.replace(/\.bin$/, '.js');
       var js = readJs(jsfile);
@@ -202,8 +202,8 @@ exports.createFileParsingTest = function (lab, binFile, withRoundtrip) {
       if (withRoundtrip) {
         debug('roundtrip. js to bin');
         var newbin = dns.DNSPacket.toBuffer(ret);
-        expect(newbin).to.deep.equal(bin);
+        expect(newbin).to.equal(bin);
       }
-      done();
+      
     });
 };

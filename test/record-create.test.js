@@ -1,5 +1,5 @@
-var Code = require('code');   // assertion library
-var Lab = require('lab');
+var Code = require('@hapi/code');   // assertion library
+var Lab = require('@hapi/lab');
 var lab = exports.lab = Lab.script();
 
 var describe = lab.describe;
@@ -15,7 +15,7 @@ var BufferWriter = require('../lib/bufferwriter');
 
 describe('DNSRecord (Create)', function () {
 
-  it('create query', function (done) {
+  it('create query', function () {
     var bw = new BufferWriter();
     var r = new DNSRecord('_services._dns-sd._udp.local',
       DNSRecord.Type.PTR, 1);
@@ -27,12 +27,10 @@ describe('DNSRecord (Create)', function () {
 
     //roundtrip
     var pr = DNSRecord.parseQuestion(b);
-    expect(pr).to.deep.include(r);
-
-    done();
+    expect(pr).to.include(r);
   });
 
-  it('SRV', function (done) {
+  it('SRV', function () {
     var bw = new BufferWriter();
     var alias = 'regin [30:46:9a:b2:b8:b2]._workstation._tcp.local';
 
@@ -63,10 +61,10 @@ describe('DNSRecord (Create)', function () {
     expect(pr.target, 'target').to.equal(r.target);
     //expect(pr).to.deep.equal(r);
 
-    done();
+    
   });
 
-  it('PTR', function (done) {
+  it('PTR', function () {
     var writer = new BufferWriter();
     var r = new DNSRecord(
       '_services._dns-sd._udp.local',
@@ -75,10 +73,10 @@ describe('DNSRecord (Create)', function () {
       10);
     r.data = '_workstation._tcp.local';
     DNSRecord.write(writer, r, true);
-    done();
+    
   });
 
-  it('reverse lookup', function (done) {
+  it('reverse lookup', function () {
 
     var rec = '013801380138013807696e2d61646472046172706100000c0001';
     var r = new DNSRecord(
@@ -89,10 +87,10 @@ describe('DNSRecord (Create)', function () {
     var b = DNSRecord.write(bw, r, true).dump();
     var recStr = b.toString('hex');
     expect(recStr).to.equal(rec);
-    done();
+    
   });
 
-  it('reverse lookup 2', function (done) {
+  it('reverse lookup 2', function () {
     var expected = '02353103313637033231310331343007696e2d61646472046172706100000c0001';
     //             '02353103313637033231310331343007696e2d616464720461727061 00000c0001'
     //                 5 1   1 6 7   2 1 1   1 3 0   i n - a d d r   a r p a
@@ -106,7 +104,7 @@ describe('DNSRecord (Create)', function () {
     expect(buf.toString('hex')).to.equal(expected);
     var r2 = DNSRecord.parseQuestion(buf);
     expect(r2.type).to.equal(DNSRecord.Type.PTR);
-    done();
+    
   });
 
 });

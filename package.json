@@ -25,9 +25,9 @@
     "qap": "^3.1.2"
   },
   "devDependencies": {
-    "code": "*",
+    "@hapi/code": "*",
     "eslint": "*",
-    "lab": "*",
+    "@hapi/lab": "*",
     "native-dns-packet": "0.1.1"
   }
 }
