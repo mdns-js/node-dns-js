@@ -32,14 +32,14 @@ describe('BufferWriter', function () {
 
   it('#buffer should accept buffer as input', function () {
     var out = new BufferWriter(10);
-    var o = out.buffer(new Buffer('abc'));
+    var o = out.buffer(Buffer.from('abc'));
     expect(o).to.be.instanceof(BufferWriter);
     expect(o.buf.toString('utf8', 0, 3)).to.equal('abc');
   });
 
   it('#buffer should not move forward on empty buffer', function () {
     var out = new BufferWriter(10);
-    var o = out.buffer(new Buffer(0));
+    var o = out.buffer(Buffer.alloc(0));
     expect(o).to.be.instanceof(BufferWriter);
     expect(out.tell()).to.equal(0);
   });
@@ -72,7 +72,7 @@ describe('BufferWriter', function () {
 
   it('#indexOf should return array with all occurances', function () {
     var out = new BufferWriter();
-    out.buffer(new Buffer('helloworldfoobarfoo'));
+    out.buffer(Buffer.from('helloworldfoobarfoo'));
     var r = out.indexOf('foo');
     expect(r).to.include([10, 16]);
   });
@@ -81,7 +81,7 @@ describe('BufferWriter', function () {
   //   var out = new BufferWriter();
   //   out.name('hello', true);
   //   expect(o.tell()).to.equal(6);
-  //   
+  //
   // });
 
 });

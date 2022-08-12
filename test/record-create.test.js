@@ -50,7 +50,7 @@ describe('DNSRecord (Create)', function () {
 
     expect(recStr, 'type, class, ttl').to.include('002100010000000a');
     expect(recStr, 'srv data').to.include('00010002000905726567696e');
-                             //002100010000000a0013000000010002000905726567696e056c6f63616c00
+    //002100010000000a0013000000010002000905726567696e056c6f63616c00
     //roundtrip
     var pr = DNSRecord.parse(b);
     expect(pr).to.include(['port', 'target', 'weight', 'priority']);
@@ -61,7 +61,7 @@ describe('DNSRecord (Create)', function () {
     expect(pr.target, 'target').to.equal(r.target);
     //expect(pr).to.deep.equal(r);
 
-    
+
   });
 
   it('PTR', function () {
@@ -73,7 +73,7 @@ describe('DNSRecord (Create)', function () {
       10);
     r.data = '_workstation._tcp.local';
     DNSRecord.write(writer, r, true);
-    
+
   });
 
   it('reverse lookup', function () {
@@ -87,7 +87,7 @@ describe('DNSRecord (Create)', function () {
     var b = DNSRecord.write(bw, r, true).dump();
     var recStr = b.toString('hex');
     expect(recStr).to.equal(rec);
-    
+
   });
 
   it('reverse lookup 2', function () {
@@ -104,7 +104,7 @@ describe('DNSRecord (Create)', function () {
     expect(buf.toString('hex')).to.equal(expected);
     var r2 = DNSRecord.parseQuestion(buf);
     expect(r2.type).to.equal(DNSRecord.Type.PTR);
-    
+
   });
 
 });

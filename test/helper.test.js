@@ -35,8 +35,8 @@ describe('helper', function () {
     var text = fs.readFileSync(filename, 'utf8');
     var js = helper.prepareJs(text);
     expect(js).to.be.a.string();
-    expect(js).to.match(/new Buffer\(/);
-    
+    expect(js).to.match(/Buffer.from\(/);
+
   });
 
   it('readJs', function () {
@@ -44,25 +44,25 @@ describe('helper', function () {
     var js = helper.readJs(filename);
     expect(js).to.exist();
     expect(js).to.include('header');
-    
+
   });
 
   it('readBin', function () {
     var filename = path.join(__dirname, 'fixtures', 'mdns-readynas.bin');
     var b = helper.readBin(filename);
     expect(b).to.be.instanceOf(Buffer);
-    
+
   });
 
   describe('from buffer', function () {
-    var b = new Buffer(packets.in.sample10, 'hex');
+    var b = Buffer.from(packets.in.sample10, 'hex');
     it('writeJs', function () {
       helper.writeBin(path.join('./', 'test.bin.log'), b);
-      
+
     });
     it('writeJs', function () {
       helper.writeJs(path.join('./', 'test.js.log'), Packet.parse(b));
-      
+
     });
   });
 

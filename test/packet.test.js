@@ -46,14 +46,14 @@ describe('DNSPacket', function () {
     var np = new NativePacket();
     np.header.rd = 0;
     np.question.push(query);
-    var nb = new Buffer(4096);
+    var nb = Buffer.alloc(4096);
     var written = NativePacket.write(nb, np);
     nb = nb.slice(0, written);
 
     expect(buf.toString('hex'), 'Not as from native').to.equal(
       nb.toString('hex'));
 
-    
+
   });
 
   it('should be able to create PTR answer', function () {
@@ -98,14 +98,14 @@ describe('DNSPacket', function () {
     //helper.equalBuffer(fixture, buf, 8);
     // //expect(buf.toString('hex')).to.equal(fixStr);
     // var parsed = dns.DNSPacket.parse(buf);
-    
+
   });
 
 
   it('new packet with flags as input', function () {
     var p = new dns.DNSPacket(0x40);
     expect(p.header.res1).to.equal(1);
-    
+
   });
 
 
@@ -127,17 +127,17 @@ describe('DNSPacket', function () {
     expect(auth.expiration).to.equal(1209600);
     expect(auth.minimum).to.equal(300);
 
-    
+
   });
 
   it('throw when question does not exist', function () {
-    var buf = new Buffer('0000840000010000000000000000000000', 'hex');
+    var buf = Buffer.from('0000840000010000000000000000000000', 'hex');
     expect(fn).to.throw(dns.errors.MalformedPacket, 'Record.type is empty');
 
-    buf = new Buffer('0000840000010000000000000001000000', 'hex');
+    buf = Buffer.from('0000840000010000000000000001000000', 'hex');
     expect(fn).to.throw(dns.errors.MalformedPacket, 'Record.class is empty');
 
-    
+
     function fn() {
       dns.parse(buf);
     }
@@ -154,7 +154,7 @@ describe('DNSPacket', function () {
     var buf = dns.DNSPacket.toBuffer(packet);
     expect(buf.toString('hex')).to.equal(expected);
     packet = dns.DNSPacket.parse(buf);
-    
+
   });
 
   it('should create another reverse lookup', function () {
@@ -172,7 +172,7 @@ describe('DNSPacket', function () {
     expect(buf.toString('hex')).to.equal(expected);
     //roundtrpip
     packet = dns.DNSPacket.parse(buf);
-    
+
   });
 
   it('same regardless of id', function () {
@@ -200,7 +200,7 @@ describe('DNSPacket', function () {
     var buf2 = DNSPacket.toBuffer(p2);
     expect(buf2.toString('hex'), 'buf2').to.equal(expected2);
 
-    
+
   });
 
 
@@ -221,7 +221,7 @@ describe('DNSPacket', function () {
     //   expect(opt).to.include(['@hapi/code', 'z', 'version', 'rcode', 'data', 'do']);
     //   expect(opt.code, '@hapi/code').to.equal(4);
     //   expect(opt.z, 'z').to.equal(4500);
-    //   
+    //
     // });
 
   });
@@ -244,10 +244,10 @@ describe('DNSPacket', function () {
       expect(fn).to.throw(dns.errors.MalformedPacket,
         'Unexpectedly big section count: 83258. Missing at least 416225 bytes.'
       );
-      
+
       function fn() {
         dns.parse(bin);
-        done('should fail');
+        // done('should fail');
       }
     });
 
@@ -256,10 +256,10 @@ describe('DNSPacket', function () {
       expect(fn).to.throw(dns.errors.MalformedPacket,
         'Unexpectedly big section count: 83258. Missing at least 416225 bytes.'
       );
-      
+
       function fn() {
         dns.parse(bin);
-        done('should fail');
+        // done('should fail');
       }
     });
 
@@ -268,10 +268,10 @@ describe('DNSPacket', function () {
       expect(fn).to.throw(dns.errors.MalformedPacket,
         'Unexpectedly big section count: 83258. Missing at least 416155 bytes.'
       );
-      
+
       function fn() {
         dns.parse(bin);
-        done('should fail');
+        // done('should fail');
       }
     });
   });//exploits

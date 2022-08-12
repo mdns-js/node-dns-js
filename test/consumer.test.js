@@ -20,12 +20,12 @@ describe('BufferConsumer', function () {
     };
 
     expect(throws).to.throw(Error, 'Expected instance of Buffer');
-    
+
   });
 
   it('throw if seek before 0', function () {
     var throws = function () {
-      var b = new Buffer(512);
+      var b = Buffer.alloc(512);
       var consumer = new BufferConsumer(b);
       consumer.seek(-1);
     };
@@ -35,35 +35,35 @@ describe('BufferConsumer', function () {
 
   it('throw if seek after end', function () {
     var throws = function () {
-      var b = new Buffer(512);
+      var b = Buffer.alloc(512);
       var consumer = new BufferConsumer(b);
       consumer.seek(515);
     };
 
     expect(throws).to.throw(Error, 'Cannot seek after EOF. 515 > 512');
-    
+
   });
 
   it('thow if slice after end', function () {
     var throws = function () {
-      var b = new Buffer(512);
+      var b = Buffer.alloc(512);
       var consumer = new BufferConsumer(b);
       consumer.seek(500);
       consumer.slice(100);
     };
 
     expect(throws).to.throw(Error, 'Buffer overflow');
-    
+
   });
 
   it('#string with length', function () {
-    var b = new Buffer('qwertasdfg');
+    var b = Buffer.from('qwertasdfg');
     var consumer = new BufferConsumer(b);
     var s = consumer.string('utf8', 3);
     expect(s).to.equal('qwe');
     s = consumer.string();
     expect(s).to.equal('rtasdfg');
-    
+
   });
 
 });
@@ -77,6 +77,6 @@ describe('BufferWriter', function () {
     var consumer = new BufferConsumer(out.dump());
     var s = consumer.name();
     expect(s).to.equal('');
-    
+
   });
 });
